@@ -1,6 +1,6 @@
 package controller;
 
-import api.ApiType;
+import model.RequestType;
 import api.ExpressionList;
 import api.RequestTimeList;
 
@@ -39,7 +39,7 @@ public class ThreadedEchoServer {
 
     private void updateRequestInfo(Handler handler) {
         LocalDateTime handleTime = handler.getHandleTime();
-        ApiType apiType = handler.getApiType();
+        RequestType apiType = handler.getApiType();
         switch (apiType) {
             case GET_TIME: {
                 this.getTimeTimeList.add(handleTime);

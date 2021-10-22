@@ -1,7 +1,7 @@
 package controller;
 import model.*;
 
-import api.ApiType;
+import model.RequestType;
 import api.ExpressionList;
 import api.RequestTimeList;
 import model.Reader;
@@ -20,7 +20,7 @@ public class Handler implements Runnable {
 
     private LocalDateTime handleTime;
     private String expr = "";
-    private ApiType apiType = ApiType.OTHER;
+    private RequestType apiType;
     private RequestTimeList evalTimeList;
     private RequestTimeList getTimeTimeList;
     private ExpressionList exprList;
@@ -37,7 +37,7 @@ public class Handler implements Runnable {
         return this.expr;
     }
 
-    public ApiType getApiType() {
+    public RequestType getApiType() {
         return this.apiType;
     }
 
@@ -57,10 +57,11 @@ public class Handler implements Runnable {
 
             // READ
             Reader reader = new Reader(in);
-            StartLine startLine = reader.readStartLine();
+//            StartLine startLine = reader.readStartLine();
+            this.apiType = reader.getRequestType();
 
             // PROCESS
-            updateResponse(startLine, reader);
+            setResponse(reader);
             String responseStr = this.response.getString();
 
             // WRITE
@@ -74,25 +75,32 @@ public class Handler implements Runnable {
         }
     }
 
-    private void updateResponse(StartLine startLine, Reader reader) throws IOException {
-        if (startLine.isGetStatus()) {
-            String html = StatusHtml.buildHtml(this.evalTimeList, this.getTimeTimeList, exprList, LocalDateTime.now());
-            this. response = new Response(STATUS_OK, html);
-        } else if (startLine.isGetTime()) {
-            String serverTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
-            this.response = new Response(STATUS_OK, serverTime);
-            this.apiType = ApiType.GET_TIME;
-        } else if (startLine.isEvalExpr()) {
-            Expression expression = reader.readExpression();
-            this.expr = expression.getExpression();
-            this.apiType = ApiType.EVAL_EXPR;
-            if (expression.isValid()) {
-                this.response = new Response(STATUS_OK, expression.getResultString());
-            } else {
-                this.response = new Response(STATUS_400, "illegal expression");
+    private void setResponse(Reader reader) throws IOException {
+        switch (this.apiType) {
+            case GET_STATUS: {
+                String html = StatusHtml.buildHtml(this.evalTimeList, this.getTimeTimeList, exprList, LocalDateTime.now());
+                this.response = new Response(STATUS_OK, html);
+                break;
             }
-        } else {
-            this.response = new Response(STATUS_404, "not found");
+            case GET_TIME: {
+                String serverTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+                this.response = new Response(STATUS_OK, serverTime);
+                break;
+            }
+            case EVAL_EXPR: {
+                Expression expression = reader.readExpression();
+                this.expr = expression.getExpression();
+                if (expression.isValid()) {
+                    this.response = new Response(STATUS_OK, expression.getResultString());
+                } else {
+                    this.response = new Response(STATUS_400, "illegal expression");
+                }
+                break;
+            }
+            case NOT_FOUND: {
+                this.response = new Response(STATUS_404, "not found");
+            }
+
         }
     }
 }

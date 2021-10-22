@@ -1,7 +1,5 @@
 package model;
 
-import model.Expression;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,10 +15,18 @@ public class Reader {
         this.in = in;
     }
 
-    public StartLine readStartLine() throws IOException {
+    private StartLine readStartLine() throws IOException {
         String str = processStartLine();
         this.startLine = new StartLine(str);
         return this.startLine;
+    }
+
+    public RequestType getRequestType() throws IOException {
+        StartLine startLine = readStartLine();
+        if (startLine.isEvalExpr()) return RequestType.EVAL_EXPR;
+        if (startLine.isGetTime()) return RequestType.GET_TIME;
+        if (startLine.isGetStatus()) return RequestType.GET_STATUS;
+        return RequestType.NOT_FOUND;
     }
 
     public Expression readExpression() throws IOException {
