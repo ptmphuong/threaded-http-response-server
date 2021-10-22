@@ -5,7 +5,7 @@ Homework requirements: [link](https://github.ccs.neu.edu/ptmphuong/cs5700_assign
 
 Program structure:
 
-![](https://github.ccs.neu.edu/ptmphuong/cs5700_assignment/blob/main/A2_http/doc/program_structure.png)
+![](https://github.com/ptmphuong/threaded-http-response-server/blob/master/doc/program_structure1.png)
 
 
 Notes:
