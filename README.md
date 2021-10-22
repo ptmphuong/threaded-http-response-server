@@ -1,13 +1,21 @@
-Bazel build command:
-`bazel build //A2_http:threaded_echo_server  `
+<h4> Simple multithreaded server that reads Http requests and responses using only java.io.InputStream, java.io.OutputStream </h3>
 
-Homework requirements: [link](https://github.ccs.neu.edu/ptmphuong/cs5700_assignment/blob/main/A2_http/doc/Programming%20Assignment%202.pdf)
+<h2> Features </h2>
 
-Program structure:
+* `/api/evalexpression`: evaluate arithmetic expressions and return results.
+* `/api/gettime`: get the local time on the server
+* `/status.html`: return an HTML page with status info of the server: 
+  * Number of each API call during the last minute, hour, 24 hours, and lifetime.
+  * Most recent 10 expressions clients submitted
+
+<h2> Build </h2>
+
+* Install [Bazel](https://docs.bazel.build/versions/main/install.html)
+* Bazel build command: `bazel build threaded_echo_server`
+* Binary file is in `bazel-bin` folder.
+
+<h2> Program structure </h2>
 
 ![](https://github.com/ptmphuong/threaded-http-response-server/blob/master/doc/program_structure1.png)
 
-
-Notes:
-* Connection cannot close in Chrome (I still can't figure out why). But it works properly on Postman and Safari.
-* For api/evalexpression stats include both success requests and bad requests on the Status page. That means bad requests are also counted in the last min/hour/24hrs/lifetime count, and listed in the expression list.
+Detailed description and requirement: [link](https://github.com/ptmphuong/threaded-http-response-server/blob/master/doc/Programming%20Assignment%202.pdf)
