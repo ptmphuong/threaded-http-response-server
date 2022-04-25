@@ -1,4 +1,4 @@
-<h4> Simple multithreaded server that reads Http requests and responses using only java.io.InputStream, java.io.OutputStream </h3>
+<h4> Simple multithreaded server that reads Http requests and responses using java.io.InputStream, java.io.OutputStream </h3>
 
 <h2> Features </h2>
 
